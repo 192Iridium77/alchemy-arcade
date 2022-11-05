@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import data from "../data";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -31,6 +32,8 @@ export default function Dashboard() {
     navigate(`/game/${gameId}`);
   };
 
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
   return (
     <Box sx={{ mx: 4 }}>
       <DrawerHeader />
@@ -47,7 +50,7 @@ export default function Dashboard() {
           sx={{ flexGrow: 1, p: 0 }}
           style={{ marginLeft: "-2rem", marginRight: "-2rem" }}
         >
-          <ImageList sx={{ width: "100%" }} cols={3}>
+          <ImageList sx={{ width: "100%" }} cols={isMobile ? 1 : 3}>
             {data.games.map((game) => (
               <ImageListItem key={game.img}>
                 <Card

@@ -7,8 +7,7 @@ import Game from "./pages/Game";
 
 import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-
-import { Theme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { baseTheme } from "./themes";
 
 export default function App() {
