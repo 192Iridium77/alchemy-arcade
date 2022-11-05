@@ -2,9 +2,10 @@ import * as React from "react";
 import Drawer from "./Drawer";
 import Toolbar from "./Toolbar";
 
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { styled, ThemeProvider, Theme } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { menuTheme } from "../../themes";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const drawerWidth = 240;
 
@@ -14,6 +15,10 @@ interface AppBarProps extends MuiAppBarProps {
 
 export default function Navigation() {
   const [open, setOpen] = React.useState(false);
+
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("md")
+  );
 
   const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
@@ -46,12 +51,14 @@ export default function Navigation() {
       <AppBar position="fixed" open={open}>
         <Toolbar open={open} handleDrawerOpen={handleDrawerOpen} />
       </AppBar>
-      <Drawer
-        drawerWidth={drawerWidth}
-        open={open}
-        handleDrawerOpen={handleDrawerOpen}
-        handleDrawerClose={handleDrawerClose}
-      />
+      {!isMobile && (
+        <Drawer
+          drawerWidth={drawerWidth}
+          open={open}
+          handleDrawerOpen={handleDrawerOpen}
+          handleDrawerClose={handleDrawerClose}
+        />
+      )}
     </ThemeProvider>
   );
 }

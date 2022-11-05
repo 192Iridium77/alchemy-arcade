@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import data from "../data";
 import { useParams } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Game() {
   const { gameId } = useParams();
   const [game, setGame] = useState();
+
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   useEffect(() => {
     setGame(data.games.find((game) => game.id === gameId));
@@ -20,7 +23,7 @@ export default function Game() {
         flexGrow: 1,
         height: "100%",
         width: "100%",
-        p: 4,
+        p: isMobile ? 0 : 4,
       }}
     >
       {game ? (
