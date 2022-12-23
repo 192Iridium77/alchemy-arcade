@@ -59,7 +59,11 @@ export default function Dashboard() {
                 >
                   <CardMedia component="img" image={game.img} alt={game.alt} />
                   <CardContent>
-                    <Typography variant="body2" className="pt-2">
+                    <Typography
+                      sx={{ minHeight: "60px" }}
+                      variant="body2"
+                      className="pt-2"
+                    >
                       {game.description}
                     </Typography>
                   </CardContent>
