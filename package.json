@@ -19,6 +19,7 @@
     "react-pageflip": "^2.0.3",
     "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
+    "stream-to-blob": "^2.0.1",
     "styled-components": "^5.3.6",
     "swiper": "^6.8.4",
     "web-vitals": "^1.1.2"
