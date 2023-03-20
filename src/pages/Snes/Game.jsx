@@ -63,21 +63,30 @@ export default function Game() {
 
     (async () => {
       const response = await fetch("/TheLegendOfZeldaALinkToThePast.smc", {
-        headers: {
-          Accept: "application/octet-stream",
-        },
+        responseType: "arraybuffer",
       });
       if (!response.ok) {
         throw new Error(
           `Failed to fetch file: ${response.status} ${response.statusText}`
         );
       }
+
       const blob = await response.blob();
-      console.log("🚀 ~ file: Game.jsx:77 ~ blob:", blob);
 
-      const file = new File(blob, "thelegofzel");
+      const reader = new FileReader();
+      reader.onload = () => {
+        const rawData = reader.result;
+        // Do something with the raw data
+        runEmulator(rawData);
+      };
+      reader.readAsArrayBuffer(blob);
 
-      runEmulator(file);
+      //   console.log("🚀 ~ file: Game.jsx:75 ~ blob:", blob);
+
+      //   const file = new File(blob, "thelegofzel");
+
+      //   runEmulator(file);
+
       //   console.log("🚀 ~ file: Game.jsx:73 ~ blob:", blob);
 
       //   const reader = new FileReader();
