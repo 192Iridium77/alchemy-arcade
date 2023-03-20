@@ -2,8 +2,10 @@ import * as React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navigation from "./components/Navigation";
-import Dashboard from "./pages/Dashboard";
-import Game from "./pages/Game";
+import ScratchList from "./pages/Scratch/List";
+import ScratchGame from "./pages/Scratch/Game";
+import SnesList from "./pages/Snes/List";
+import SnesGame from "./pages/Snes/Game";
 
 import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,10 +22,12 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<Navigate to="/dashboard" replace={true} />}
+              element={<Navigate to="/scratch" replace={true} />}
             />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/game/:gameId" element={<Game />} />
+            <Route path="/scratch" element={<ScratchList />} />
+            <Route path="/scratch/game/:gameId" element={<ScratchGame />} />
+            <Route path="/snes" element={<SnesList />} />
+            <Route path="/snes/game/:gameId" element={<SnesGame />} />
           </Routes>
         </Container>
       </Box>

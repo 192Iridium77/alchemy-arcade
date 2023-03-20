@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -9,11 +9,9 @@ const container = document.getElementById("app");
 // change to container! when switched to typescript
 const root = createRoot(container);
 root.render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

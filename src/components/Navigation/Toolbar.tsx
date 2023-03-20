@@ -2,7 +2,7 @@ import { Toolbar as MuiToolbar, IconButton, Typography } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { Theme } from "@mui/material/styles";
 
-// import Image from "mui-image";
+import Image from "mui-image";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface ToolbarProps {
@@ -31,8 +31,13 @@ export default function Toolbar({ open, handleDrawerOpen }: ToolbarProps) {
           <Menu />
         </IconButton>
       )}
-      {/* <Image src="/AppIcon.png" width={50} /> */}
-      <Typography variant="h6" noWrap component="div" sx={{ color: "black" }}>
+      <Image src="/ArcadeLogo.png" width={50} />
+      <Typography
+        variant="h6"
+        noWrap
+        component="div"
+        sx={{ color: "black", marginLeft: 3 }}
+      >
         {process.env.REACT_APP_TITLE}
       </Typography>
     </MuiToolbar>

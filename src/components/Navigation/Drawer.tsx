@@ -6,7 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
+import Image from "mui-image";
 import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
@@ -100,9 +100,31 @@ export default function Drawer({
                   justifyContent: "center",
                 }}
               >
-                <VideogameAssetIcon />
+                <Image src="/scratchLogo.png" style={{ width: 40 }} />
               </ListItemIcon>
               <ListItemText primary="Games" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </Link>
+        </ListItem>
+        <ListItem disablePadding sx={{ display: "block" }}>
+          <Link to="/snes" style={{ textDecoration: "none", color: "black" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <Image src="/snes.webp" style={{ width: 40, height: 40 }} />
+              </ListItemIcon>
+              <ListItemText primary="Snes" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </Link>
         </ListItem>
