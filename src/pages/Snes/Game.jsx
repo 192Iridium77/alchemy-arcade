@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useCallback } from "react";
-import streamToBlob from "stream-to-blob";
 // import data from "./data";
 // import { useParams } from "react-router-dom";
 // import useMediaQuery from "@mui/material/useMediaQuery";
@@ -63,18 +62,33 @@ export default function Game() {
     snes9x = require("./snes9xNext");
 
     (async () => {
-      const response = await fetch("./TheLegendOfZeldaALinkToThePast.smc");
+      const response = await fetch("/TheLegendOfZeldaALinkToThePast.smc", {
+        headers: {
+          Accept: "application/octet-stream",
+        },
+      });
       if (!response.ok) {
         throw new Error(
           `Failed to fetch file: ${response.status} ${response.statusText}`
         );
       }
       const blob = await response.blob();
+      console.log("🚀 ~ file: Game.jsx:77 ~ blob:", blob);
 
-      console.log("🚀 ~ file: Game.jsx:69 ~ .then ~ blob:", blob);
-      const file = new File([blob], "The Legend of Zelda - A Link to the Past");
-      console.log("🚀 ~ file: Game.jsx:76 ~ .then ~ file:", file);
+      const file = new File(blob, "thelegofzel");
+
       runEmulator(file);
+      //   console.log("🚀 ~ file: Game.jsx:73 ~ blob:", blob);
+
+      //   const reader = new FileReader();
+      //   reader.onload = (event) => {
+      //     const contents = event.target.result;
+      //     console.log("🚀 ~ file: Game.jsx:78 ~ contents:", contents);
+      //     // Do something with the file contents
+      //     runEmulator(contents);
+      //   };
+
+      //   reader.readAsArrayBuffer(blob);
     })();
   }, [runEmulator]);
   //   const { gameId } = useParams();
