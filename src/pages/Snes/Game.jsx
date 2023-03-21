@@ -77,7 +77,7 @@ export default function Game() {
       reader.onload = () => {
         const rawData = reader.result;
         // Do something with the raw data
-        runEmulator(rawData);
+        initFromData(rawData, "thelegofzel");
       };
       reader.readAsArrayBuffer(blob);
 
@@ -99,7 +99,7 @@ export default function Game() {
 
       //   reader.readAsArrayBuffer(blob);
     })();
-  }, [runEmulator]);
+  }, [initFromData]);
   //   const { gameId } = useParams();
 
   //   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
