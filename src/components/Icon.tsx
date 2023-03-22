@@ -6,31 +6,36 @@ import { ReactComponent as Photograph } from "./icons/Photograph.svg";
 import { ReactComponent as Truck } from "./icons/Truck.svg";
 import { ReactComponent as Book } from "./icons/Book.svg";
 
-export default function Icon({ type, size }) {
-  const icons = {
-    // CreditCard,
-    Home,
-    LocationMarker,
-    Menu,
-    Photograph,
-    Truck,
-    Book,
-  };
-  const SelectedIcon = icons[type];
-  const getSize = () => {
-    switch (size) {
-      case "sm":
-        return "w-4 h-4";
-      case "md":
-        return "w-6 h-6";
-      case "lg":
-        return "w-8 h-8";
-      case "xl":
-        return "w-12 h-12";
-      default:
-        return "w-6 h-6";
-    }
-  };
+const icons = {
+  // CreditCard,
+  Home,
+  LocationMarker,
+  Menu,
+  Photograph,
+  Truck,
+  Book,
+};
 
-  return <SelectedIcon className={getSize(size)} />;
+const sizes = {
+  sm: "12px",
+  md: "24px",
+  lg: "32px",
+  xl: "48px",
+};
+
+interface IconProps {
+  type: keyof typeof icons;
+  size?: keyof typeof sizes;
+  onClick: () => void;
+}
+
+export default function Icon({ type, size = "md", onClick }: IconProps) {
+  const SelectedIcon = icons[type];
+
+  return (
+    <SelectedIcon
+      onClick={onClick}
+      style={{ width: sizes[size], height: sizes[size] }}
+    />
+  );
 }

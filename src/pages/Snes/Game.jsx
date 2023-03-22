@@ -9,11 +9,8 @@ let snes9x;
 
 export default function Game() {
   const initFromData = useCallback((data, name) => {
-    console.log("🚀 ~ file: snes9xNext.js:82 ~ initFromData ~ name:", name);
-    console.log("🚀 ~ file: snes9xNext.js:82 ~ initFromData ~ data:", data);
     var dataView = new Uint8Array(data);
-    snes9x.Module.FS_createFolder("/", "game", true, true);
-    snes9x.Module.FS_createDataFile("/game", name, dataView, true, true);
+    snes9x.Module.FS_createDataFile("/", name, dataView, true, true);
     snes9x.Module.FS_createFolder("/", "etc", true, true);
     var config = "input_player1_select = shift\n";
     var latency = parseInt(document.getElementById("latency").value, 10);

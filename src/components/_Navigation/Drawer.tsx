@@ -10,6 +10,7 @@ import Image from "mui-image";
 import IconButton from "@mui/material/IconButton";
 import { Link } from "react-router-dom";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface DrawerProps {
   drawerWidth: number;
@@ -25,6 +26,10 @@ export default function Drawer({
   handleDrawerClose,
 }: DrawerProps) {
   const theme = useTheme();
+
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("md")
+  );
 
   const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,

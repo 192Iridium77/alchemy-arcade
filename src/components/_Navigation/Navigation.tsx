@@ -28,14 +28,15 @@ export default function Navigation() {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    ...(open && {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+    ...(open &&
+      !isMobile && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(["width", "margin"], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
       }),
-    }),
   }));
 
   const handleDrawerOpen = () => {
@@ -51,14 +52,12 @@ export default function Navigation() {
       <AppBar position="fixed" open={open}>
         <Toolbar open={open} handleDrawerOpen={handleDrawerOpen} />
       </AppBar>
-      {!isMobile && (
-        <Drawer
-          drawerWidth={drawerWidth}
-          open={open}
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerClose={handleDrawerClose}
-        />
-      )}
+      <Drawer
+        drawerWidth={drawerWidth}
+        open={open}
+        handleDrawerOpen={handleDrawerOpen}
+        handleDrawerClose={handleDrawerClose}
+      />
     </ThemeProvider>
   );
 }

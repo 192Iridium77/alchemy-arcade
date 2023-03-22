@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Navigation from "./components/Navigation";
+import { TopBar } from "./components/Navigation";
 import ScratchList from "./pages/Scratch/List";
 import ScratchGame from "./pages/Scratch/Game";
 import SnesList from "./pages/Snes/List";
@@ -11,13 +11,15 @@ import { Box, Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { baseTheme } from "./themes";
+import MenuItems from "./components/MenuItems";
 
 export default function App() {
   return (
     <ThemeProvider theme={baseTheme}>
-      <Box sx={{ display: "flex", height: "100%" }}>
+      <Box sx={{ display: "flex-col", height: "100%" }}>
         <CssBaseline />
-        <Navigation />
+        {/* <Navigation /> */}
+        <TopBar leftMenu={<MenuItems />} />
         <Container sx={{ paddingTop: 8, height: "100%" }}>
           <Routes>
             <Route
