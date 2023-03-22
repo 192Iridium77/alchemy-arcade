@@ -40,22 +40,24 @@ export default function TopBar({ leftMenu, rightMenu }: MobileTopBarProps) {
   return (
     <StyledTopbarContainer className="dropshadow-bottom-md">
       <StyledPopoverContainer>
-        <Popover
-          isOpen={isLeftMenuOpen}
-          positions={["bottom"]}
-          content={({ position, childRect, popoverRect }) => (
-            <div onClick={() => setIsLeftMenuOpen(!isLeftMenuOpen)}>
-              {leftMenu}
+        {leftMenu ? (
+          <Popover
+            isOpen={isLeftMenuOpen}
+            positions={["bottom"]}
+            content={({ position, childRect, popoverRect }) => (
+              <div onClick={() => setIsLeftMenuOpen(!isLeftMenuOpen)}>
+                {leftMenu}
+              </div>
+            )}
+          >
+            <div>
+              <Icon
+                type="Menu"
+                onClick={() => setIsLeftMenuOpen(!isLeftMenuOpen)}
+              />
             </div>
-          )}
-        >
-          <div>
-            <Icon
-              type="Menu"
-              onClick={() => setIsLeftMenuOpen(!isLeftMenuOpen)}
-            />
-          </div>
-        </Popover>
+          </Popover>
+        ) : null}
       </StyledPopoverContainer>
       <StyledLogoContainer>
         <img src="/ArcadeLogo.png" width={50} alt="Logo" />

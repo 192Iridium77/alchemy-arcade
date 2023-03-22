@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 import { TopBar } from "./components/Navigation";
 import ScratchList from "./pages/Scratch/List";
@@ -7,19 +8,29 @@ import ScratchGame from "./pages/Scratch/Game";
 import SnesList from "./pages/Snes/List";
 import SnesGame from "./pages/Snes/Game";
 
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { baseTheme } from "./themes";
 import MenuItems from "./components/MenuItems";
+import styled from "styled-components";
+import { md, Mobile } from "./components/responsive";
+
+const TopBarContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 
 export default function App() {
   return (
     <ThemeProvider theme={baseTheme}>
-      <Box sx={{ display: "flex-col", height: "100%" }}>
-        <CssBaseline />
-        {/* <Navigation /> */}
-        <TopBar leftMenu={<MenuItems />} />
+      <TopBarContainer>
+        <TopBar
+          leftMenu={
+            useMediaQuery({ query: md.toString() }) ? <MenuItems /> : null
+          }
+        />
         <Container sx={{ paddingTop: 8, height: "100%" }}>
           <Routes>
             <Route
@@ -32,7 +43,7 @@ export default function App() {
             <Route path="/snes/game/:gameId" element={<SnesGame />} />
           </Routes>
         </Container>
-      </Box>
+      </TopBarContainer>
     </ThemeProvider>
   );
 }

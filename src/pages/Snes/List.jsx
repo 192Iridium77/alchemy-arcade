@@ -1,4 +1,3 @@
-import { styled } from "@mui/material/styles";
 import {
   Box,
   Typography,
@@ -12,15 +11,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import data from "./data";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
 
 // TODO temporary data store
 
@@ -36,7 +26,6 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ mx: 4 }}>
-      <DrawerHeader />
       <div>
         <Typography
           variant="h5"
@@ -67,7 +56,9 @@ export default function Dashboard() {
                       {game.description}
                     </Typography>
                   </CardContent>
-                  <CardHeader subheader={`by ${game.author}`}></CardHeader>
+                  {game.author ? (
+                    <CardHeader subheader={`by ${game.author}`}></CardHeader>
+                  ) : null}
                 </Card>
               </ImageListItem>
             ))}
