@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { useCallback } from "react";
 // import data from "./data";
 // import { useParams } from "react-router-dom";
 // import useMediaQuery from "@mui/material/useMediaQuery";
-
-let snes9x;
+import { Helmet } from "react-helmet";
 
 export default function Game() {
+  const [gameData, setGameData] = useState();
+  const [pollTimer, setPollTimer] = useState();
+  const [loading, setLoading] = useState(true);
+
   const initFromData = useCallback((data, name) => {
     var dataView = new Uint8Array(data);
-    snes9x.Module.FS_createDataFile("/", name, dataView, true, true);
-    snes9x.Module.FS_createFolder("/", "etc", true, true);
+    window.Module.FS_createDataFile("/", name, dataView, true, true);
+    window.Module.FS_createFolder("/", "etc", true, true);
     var config = "input_player1_select = shift\n";
     var latency = parseInt(document.getElementById("latency").value, 10);
     if (isNaN(latency)) latency = 96;
@@ -19,7 +22,7 @@ export default function Game() {
     if (document.getElementById("vsync").checked)
       config += "video_vsync = true\n";
     else config += "video_vsync = false\n";
-    snes9x.Module.FS_createDataFile(
+    window.Module.FS_createDataFile(
       "/etc",
       "retroarch.cfg",
       config,
@@ -32,12 +35,14 @@ export default function Game() {
     document.getElementById("latency").disabled = true;
     document.getElementById("latency-label").style.color = "gray";
     console.log("Starting up");
-    snes9x.Module["callMain"](snes9x.Module["arguments"]);
+    window.Module["callMain"](window.Module["arguments"]);
+
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    snes9x = require("./snes9xNext");
-
+    // snes9x = require("../../../public/snes9x.js");
+    setLoading(true);
     (async () => {
       const response = await fetch("/TheLegendOfZeldaALinkToThePast.smc", {
         responseType: "arraybuffer",
@@ -52,9 +57,9 @@ export default function Game() {
 
       const rawData = await blob.arrayBuffer();
 
-      initFromData(rawData, "TheLegendOfZelda.smc");
+      setGameData(rawData);
     })();
-  }, [initFromData]);
+  }, []);
   //   const { gameId } = useParams();
 
   //   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -62,6 +67,25 @@ export default function Game() {
   //   useEffect(() => {
   //     setGame(data.find((game) => game.id === gameId));
   //   }, [gameId]);
+
+  useEffect(() => {
+    if (gameData) {
+      const timer = setInterval(() => {
+        if (window.Module) {
+          initFromData(gameData, "TheLegendOfZelda.smc");
+        }
+      }, 50);
+
+      setPollTimer(timer);
+      console.log("initing");
+    }
+  }, [gameData, initFromData]);
+
+  useEffect(() => {
+    if (!loading) {
+      clearInterval(pollTimer);
+    }
+  });
 
   return (
     <Box
@@ -125,6 +149,9 @@ export default function Game() {
         </div>
         <textarea class="emscripten" id="output" rows="8"></textarea>
       </div>
+      <Helmet>
+        <script src="/snes9x.js" type="text/javascript" />
+      </Helmet>
     </Box>
   );
 }
