@@ -5,13 +5,12 @@ const StyledMenuItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
 
   padding: 16px;
   background-color: white;
 `;
 
-export default function MenuItems() {
+export default function MenuItems({ className }: any) {
   const navigate = useNavigate();
 
   const navigateToScratchList = () => {
@@ -23,11 +22,11 @@ export default function MenuItems() {
   };
 
   return (
-    <StyledMenuItemsContainer className="dropshadow-md">
-      <button onClick={navigateToScratchList}>
+    <StyledMenuItemsContainer className={className}>
+      <button onClick={navigateToScratchList} style={{ marginTop: "12px" }}>
         <img src="/scratchLogo.png" style={{ width: 40 }} alt="Scratch Logo" />
       </button>
-      <button onClick={navigateToSnesList}>
+      <button onClick={navigateToSnesList} style={{ marginTop: "12px" }}>
         <img
           src="/snes.webp"
           style={{ width: 40, height: 40 }}

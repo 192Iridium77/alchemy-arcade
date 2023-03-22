@@ -14,6 +14,9 @@ const StyledTopbarContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 56px;
+
+  z-index: 1;
+  position: relative;
 `;
 
 const StyledLogoContainer = styled.div`

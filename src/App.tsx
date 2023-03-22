@@ -9,12 +9,11 @@ import SnesList from "./pages/Snes/List";
 import SnesGame from "./pages/Snes/Game";
 
 import { Container } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { baseTheme } from "./themes";
 import MenuItems from "./components/MenuItems";
 import styled from "styled-components";
-import { md, Mobile } from "./components/responsive";
+import { md, Desktop } from "./components/responsive";
 
 const TopBarContainer = styled.div`
   display: flex;
@@ -22,27 +21,51 @@ const TopBarContainer = styled.div`
   height: 100%;
 `;
 
+const SideBarContainer = styled.div`
+  display: flex;
+  height: 100%;
+`;
+
 export default function App() {
+  const isMobile = useMediaQuery({ maxWidth: md });
+
   return (
     <ThemeProvider theme={baseTheme}>
       <TopBarContainer>
         <TopBar
           leftMenu={
-            useMediaQuery({ query: md.toString() }) ? <MenuItems /> : null
+            isMobile ? (
+              <MenuItems
+                className="dropshadow-md"
+                style={{ backgroundColor: "white" }}
+              />
+            ) : null
           }
         />
-        <Container sx={{ paddingTop: 8, height: "100%" }}>
-          <Routes>
-            <Route
-              path="/"
-              element={<Navigate to="/scratch" replace={true} />}
-            />
-            <Route path="/scratch" element={<ScratchList />} />
-            <Route path="/scratch/game/:gameId" element={<ScratchGame />} />
-            <Route path="/snes" element={<SnesList />} />
-            <Route path="/snes/game/:gameId" element={<SnesGame />} />
-          </Routes>
-        </Container>
+        <SideBarContainer>
+          <Desktop>
+            <div
+              style={{
+                backgroundColor: "white",
+                borderRight: "1px solid #E7EBF0",
+              }}
+            >
+              <MenuItems></MenuItems>
+            </div>
+          </Desktop>
+          <Container sx={{ paddingTop: 8, height: "100%" }}>
+            <Routes>
+              <Route
+                path="/"
+                element={<Navigate to="/scratch" replace={true} />}
+              />
+              <Route path="/scratch" element={<ScratchList />} />
+              <Route path="/scratch/game/:gameId" element={<ScratchGame />} />
+              <Route path="/snes" element={<SnesList />} />
+              <Route path="/snes/game/:gameId" element={<SnesGame />} />
+            </Routes>
+          </Container>
+        </SideBarContainer>
       </TopBarContainer>
     </ThemeProvider>
   );
