@@ -2,7 +2,7 @@ import * as React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 
-import { TopBar } from "./components/Navigation";
+import { TopBar } from "alchemy-tech-ui";
 import ScratchList from "./pages/Scratch/List";
 import ScratchGame from "./pages/Scratch/Game";
 import SnesList from "./pages/Snes/List";
@@ -53,7 +53,7 @@ export default function App() {
               <MenuItems></MenuItems>
             </div>
           </Desktop>
-          <Container sx={{ paddingTop: 8, height: "100%" }}>
+          <Container sx={{ paddingTop: 4, height: "100%" }}>
             <Routes>
               <Route
                 path="/"

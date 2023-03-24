@@ -3,7 +3,6 @@ import { Box } from "@mui/material";
 import { useCallback } from "react";
 // import data from "./data";
 // import { useParams } from "react-router-dom";
-// import useMediaQuery from "@mui/material/useMediaQuery";
 import { Helmet } from "react-helmet";
 
 export default function Game() {
@@ -30,7 +29,6 @@ export default function Game() {
         true,
         true
       );
-      // document.getElementById("canvas_div").style.display = "block";
       window.Module["callMain"](window.Module["arguments"]);
 
       setLoading(false);
@@ -40,15 +38,13 @@ export default function Game() {
 
   const runEmulator = useCallback(
     (gameData) => {
-      if (gameData) {
-        const timer = setInterval(() => {
-          if (window.Module) {
-            initFromData(gameData, "TheLegendOfZelda.smc");
-          }
-        }, 50);
+      const timer = setInterval(() => {
+        if (window.Module) {
+          initFromData(gameData, "TheLegendOfZelda.smc");
+        }
+      }, 50);
 
-        setPollTimer(timer);
-      }
+      setPollTimer(timer);
     },
     [initFromData]
   );
@@ -167,7 +163,7 @@ export default function Game() {
           </label>
         </div>
         <textarea
-          class="emscripten"
+          className="emscripten"
           id="output"
           rows="8"
           style={{ width: "100%" }}
