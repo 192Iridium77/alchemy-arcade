@@ -6,7 +6,7 @@ import { TopBar } from "alchemy-tech-ui";
 import ScratchList from "./pages/Scratch/List";
 import ScratchGame from "./pages/Scratch/Game";
 import SnesList from "./pages/Snes/List";
-import SnesGame from "./pages/Snes/Game";
+import SnesEmulator from "./pages/Snes/Emulator";
 
 import { Container } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
@@ -62,7 +62,7 @@ export default function App() {
               <Route path="/scratch" element={<ScratchList />} />
               <Route path="/scratch/game/:gameId" element={<ScratchGame />} />
               <Route path="/snes" element={<SnesList />} />
-              <Route path="/snes/game/:gameId" element={<SnesGame />} />
+              <Route path="/snes/game/:gameId" element={<SnesEmulator />} />
             </Routes>
           </Container>
         </SideBarContainer>
