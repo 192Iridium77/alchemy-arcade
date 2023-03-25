@@ -136,8 +136,8 @@ export default function Emulator() {
 
       window.Module = {
         noInitialRun: true,
-        // arguments: ["-v", `/${game.filename}`], // libretro cli args, add '--help' to the array for more info
-        arguments: ["-v", "--menu"], // libretro cli args, add '--help' to the array for more info
+        arguments: ["-v", `/${game.filename}`], // libretro cli args, add '--help' to the array for more info
+        // arguments: ["-v", "--menu"], // libretro cli args, add '--help' to the array for more info
         preRun: [], // not sure how pre/post work yet, I think they are hooks that give access to internal variables at runtime
         postRun: [],
         print: (text) => {
