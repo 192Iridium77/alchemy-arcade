@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import styled from "styled-components";
+import { generateConfig } from "./config";
 
 const GameContainer = styled.div`
   display: flex;
@@ -44,8 +45,9 @@ const EmulatorOutput = styled.div`
   overflow: auto;
   width: 100%;
   position: absolute;
-  height: 100px;
+  height: 200px;
   bottom: 0;
+  white-space: pre-wrap;
 `;
 
 const LoadingDisplay = styled.div`
@@ -71,28 +73,29 @@ const ButtonGroup = styled.div`
 export default function Emulator() {
   const { gameId } = useParams();
 
-  //   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
-
   const [game, setGame] = useState();
   const [pollTimer, setPollTimer] = useState();
   const [loading, setLoading] = useState("loading"); //typeme
   const [progress, setProgress] = useState(0); //typeme
   const [emulatorOutput, setEmulatorOutput] = useState("");
   const [showOutput, setShowOutput] = useState(false);
+  const [isSetupComplete, setIsSetupComplete] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const initFromData = useCallback((data, name) => {
+    setLoading("loading");
+    console.log("initFromData");
     const dataView = new Uint8Array(data);
-    window.Module.FS_createDataFile("/", name, dataView, true, true);
-    window.Module.FS_createFolder("/", "etc", true, true);
 
-    // todo string template config
-    let config = "input_player1_select = shift\n";
-    config += "audio_latency = 96\n";
-    config += "video_vsync = true\n";
+    window.Module.FS_createDataFile("/", name, dataView, true, true);
+    window.Module.FS_createFolder("/", "save", true, true);
+    window.Module.FS_createFolder("/", "save/files", true, true);
+    window.Module.FS_createFolder("/", "save/states", true, true);
+    window.Module.FS_createFolder("/", "etc", true, true);
     window.Module.FS_createDataFile(
       "/etc",
       "retroarch.cfg",
-      config,
+      generateConfig(),
       true,
       true
     );
@@ -103,9 +106,11 @@ export default function Emulator() {
 
   const runEmulator = useCallback(
     (gameData) => {
+      console.log("run emulator polling?");
       // todo track internal initialisation and remove polling
       const timer = setInterval(() => {
         if (window.Module?.FS_createDataFile) {
+          console.log("poll emulator!");
           initFromData(gameData, game.filename);
         }
       }, 50);
@@ -116,123 +121,131 @@ export default function Emulator() {
   );
 
   useEffect(() => {
-    setLoading("initialising");
-
-    window.onbeforeunload = function () {
-      alert("game closed");
-      try {
-        window.exit("Game Closed");
-        alert("game closed");
-      } catch (err) {
-        console.log(err.message);
-        alert("game closed");
-      }
-      return "";
-    };
-
+    console.log("find game");
     setGame(
       data.find((gameData) => {
         return gameData.id === gameId;
       })
     );
+  }, [gameId]);
 
-    if (!game) return;
+  useEffect(() => {
+    if (game) {
+      console.log("start emulator");
+      setLoading("loading");
 
-    window.Module = {
-      noInitialRun: true, // sets shouldRunNow to false which will initialise, but not start the emulator. emulator can then probably start by calling Module.run() or doRun
-      arguments: ["-v", `/${game.filename}`], // libretro cli args, add '--help' to the array for more info
-      preRun: [], // not sure how pre/post work yet, I think they are hooks that give access to internal variables at runtime
-      postRun: [],
-      print: (text) => {
-        text = Array.prototype.slice.call(arguments).join(" "); // arguments is global??
-        setEmulatorOutput((value) => {
-          return `${value}${text}\n`;
-        });
-      },
-      printErr: function (text) {
-        // todo toast
-        text = Array.prototype.slice.call(arguments).join(" ");
-        setEmulatorOutput((value) => {
-          return `${value}${text}\n`;
-        });
-      },
-      canvas: document.getElementById("canvas"),
-      setProgress: function (remaining, expected) {
-        console.log(
-          "🚀 ~ file: Game.jsx:134 ~ useEffect ~ expected:",
-          expected
-        );
-        console.log(
-          "🚀 ~ file: Game.jsx:110 ~ useEffect ~ remaining:",
-          remaining
-        );
-
-        setProgress((expected - remaining) / expected);
-      },
-      setStatus: function (text) {
-        console.log("🚀 ~ file: Game.jsx:108 ~ useEffect ~ text:", text);
-        setLoading(text);
-        if (window.Module.setStatus.interval)
-          clearInterval(this.setStatus.interval); // why is this here????
-      },
-      totalDependencies: 0,
-      monitorRunDependencies: function (remaining) {
-        console.log(
-          "🚀 ~ file: Emulator.jsx:167 ~ useEffect ~ remaining:",
-          remaining
-        );
-        this.totalDependencies = Math.max(this.totalDependencies, remaining);
-
-        if (remaining) {
-          setProgress(
-            this.totalDependencies - remaining / this.totalDependencies
+      window.Module = {
+        noInitialRun: true,
+        // arguments: ["-v", `/${game.filename}`], // libretro cli args, add '--help' to the array for more info
+        arguments: ["-v", "--menu"], // libretro cli args, add '--help' to the array for more info
+        preRun: [], // not sure how pre/post work yet, I think they are hooks that give access to internal variables at runtime
+        postRun: [],
+        print: (text) => {
+          text = Array.prototype.slice.call(arguments).join(" "); // arguments is global??
+          setEmulatorOutput((value) => {
+            return `${value}${text}\n`;
+          });
+        },
+        printErr: function (text) {
+          // todo toast
+          text = Array.prototype.slice.call(arguments).join(" ");
+          setEmulatorOutput((value) => {
+            return `${value}${text}\n`;
+          });
+        },
+        canvas: document.getElementById("canvas"),
+        setProgress: function (remaining, expected) {
+          console.log(
+            "🚀 ~ file: Game.jsx:134 ~ useEffect ~ expected:",
+            expected
           );
-        } else {
-          setLoading("complete");
+          console.log(
+            "🚀 ~ file: Game.jsx:110 ~ useEffect ~ remaining:",
+            remaining
+          );
+
+          setProgress(((expected - remaining) / expected) * 100);
+        },
+        setStatus: function (text) {
+          console.log("🚀 ~ file: Game.jsx:108 ~ useEffect ~ text:", text);
+          setLoading(text);
+          if (window.Module.setStatus.interval)
+            clearInterval(this.setStatus.interval); // why is this here????
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function (remaining) {
+          console.log(
+            "🚀 ~ file: Emulator.jsx:167 ~ useEffect ~ remaining:",
+            remaining
+          );
+          this.totalDependencies = Math.max(this.totalDependencies, remaining);
+
+          if (remaining) {
+            setProgress(
+              this.totalDependencies - remaining / this.totalDependencies
+            );
+          } else {
+            setLoading("complete");
+          }
+        },
+      };
+
+      (async () => {
+        const response = await fetch(`/${game.filename}`, {
+          responseType: "arraybuffer",
+        });
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch file: ${response.status} ${response.statusText}`
+          );
         }
-      },
-    };
 
-    (async () => {
-      const response = await fetch(`/${game.filename}`, {
-        responseType: "arraybuffer",
-      });
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch file: ${response.status} ${response.statusText}`
-        );
-      }
+        const blob = await response.blob();
 
-      const blob = await response.blob();
+        const rawData = await blob.arrayBuffer();
 
-      const rawData = await blob.arrayBuffer();
+        // wait until this point here to bring in the script, then wait for the script to load.
+        setTimeout(() => {
+          setIsSetupComplete(true);
+          runEmulator(rawData);
+        }, 1000);
+      })();
 
-      runEmulator(rawData);
-    })();
-
-    return () => {
-      try {
-        window.exit("Game Closed");
-      } catch (err) {
-        console.log(err.message);
-      }
-      window.removeEventListener("beforeunload", () => {});
-    };
-  }, [runEmulator, game, gameId]);
+      return () => {
+        try {
+          window.exit("Game Closed");
+        } catch (err) {
+          console.log(err.message);
+        }
+      };
+    }
+  }, [runEmulator, game]);
 
   useEffect(() => {
     if (!loading) {
+      console.log("terminating polling");
       clearInterval(pollTimer);
     }
   }, [loading, pollTimer]);
+
+  const handlePlayPause = () => {
+    setIsPaused(!isPaused);
+    if (isPaused) {
+      window.Module.resumeMainLoop();
+    } else {
+      window.Module.pauseMainLoop();
+    }
+  };
 
   return (
     <GameContainer>
       {game ? (
         <>
-          <Helmet>
-            <script defer src="/snes9x.js" type="text/javascript" />
-          </Helmet>
+          {isSetupComplete ? (
+            <Helmet>
+              <script src="/snes9x.js" type="text/javascript" />
+            </Helmet>
+          ) : null}
           <div style={{ marginTop: "12px" }}>
             <CanvasContainer>
               <StyledCanvas
@@ -254,6 +267,12 @@ export default function Emulator() {
               {loading ? null : (
                 <CanvasControls>
                   <ButtonGroup>
+                    <Icon
+                      type={isPaused ? "Play" : "Pause"}
+                      color="white"
+                      onClick={handlePlayPause}
+                    />
+
                     <Icon
                       type="CommandLine"
                       onClick={() => setShowOutput(!showOutput)}
